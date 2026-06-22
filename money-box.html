@@ -260,6 +260,32 @@
     transition: background-color 0.2s ease;
   }
 
+  .causali-manage-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 180px;
+    overflow-y: auto;
+  }
+
+  .causale-manage-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 8px 10px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background-color: var(--color-bg);
+    font-size: 0.88rem;
+  }
+
+  .causale-manage-item .btn-icon {
+    padding: 5px 8px;
+  }
+
+  .causale-manage-item .btn-icon .icon { margin-right: 0; }
+
   /* ---------- Cards ---------- */
   .card {
     background-color: var(--color-bg-secondary);
@@ -310,8 +336,28 @@
   .chart-canvas-box {
     position: relative;
     width: 100%;
-    max-width: 200px;
+    max-width: 110px;
     aspect-ratio: 1 / 1;
+  }
+
+  .chart-canvas-box-lg {
+    max-width: 320px;
+  }
+
+  .chartjs-tooltip {
+    position: fixed;
+    pointer-events: none;
+    transform: translate(-50%, -115%);
+    background: rgba(20, 20, 20, 0.92);
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.12s ease;
   }
 
   .chart-empty {
@@ -319,6 +365,47 @@
     color: var(--color-text-secondary);
     padding: 60px 20px;
     font-size: 1rem;
+  }
+
+  .chart-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 18px;
+    width: 100%;
+  }
+
+  .chart-mini {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 130px;
+    padding: 8px;
+    border-radius: 10px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+  }
+
+  .chart-mini:hover,
+  .chart-mini:focus-visible {
+    background-color: var(--color-bg);
+    transform: translateY(-2px);
+    outline: none;
+  }
+
+  .chart-mini-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .chart-mini-total {
+    font-size: 0.72rem;
+    color: var(--color-text-secondary);
+    text-align: center;
   }
 
   .chart-legend {
@@ -389,6 +476,101 @@
   }
 
   .stats-currency-label:first-child { margin-top: 0; }
+
+  /* ---------- Collapsible currency groups (charts & stats) ---------- */
+  .currency-collapse-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .currency-toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+    background: var(--color-bg);
+    color: var(--color-text-secondary);
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .currency-toggle-btn:hover,
+  .currency-toggle-btn:focus-visible {
+    color: var(--color-text);
+    outline: none;
+  }
+
+  .drag-handle {
+    cursor: grab;
+    color: var(--color-text-secondary);
+    line-height: 1;
+  }
+
+  .currency-collapse-item {
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .currency-collapse-item.dragging {
+    opacity: 0.4;
+  }
+
+  .currency-toggle-arrow {
+    display: inline-block;
+    transition: transform 0.3s ease;
+  }
+
+  .currency-collapse-item.open .currency-toggle-arrow {
+    transform: rotate(180deg);
+  }
+
+  .currency-collapse-body {
+    display: grid;
+    grid-template-rows: minmax(0, 0fr);
+    overflow: hidden;
+    opacity: 0;
+    transition: grid-template-rows 0.35s ease, opacity 0.3s ease, padding-top 0.35s ease;
+  }
+
+  .currency-collapse-body > * {
+    min-height: 0;
+    align-self: start;
+  }
+
+  .currency-collapse-item.open .currency-collapse-body {
+    grid-template-rows: minmax(0, 1fr);
+    opacity: 1;
+    padding-top: 8px;
+  }
+
+  .chart-grid .currency-collapse-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .chart-grid .currency-collapse-group .currency-collapse-item {
+    width: 130px;
+  }
+
+  .chart-grid .currency-collapse-group .chart-mini {
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .stats-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
 
   /* ---------- Breakdown per causale ---------- */
   .breakdown {
@@ -720,6 +902,8 @@
 
   .confirm-modal { max-width: 380px; }
 
+  .chart-modal { max-width: 480px; }
+
   .confirm-message {
     font-size: 0.95rem;
     line-height: 1.5;
@@ -1040,10 +1224,7 @@
       <section class="card panel">
         <h3 class="panel-title" data-i18n="panelDistribuzione">Distribuzione patrimonio</h3>
         <div class="chart-wrapper">
-          <div class="chart-canvas-box">
-            <canvas id="pieChart" aria-label="Grafico a torta del patrimonio per causale"></canvas>
-          </div>
-          <div class="chart-legend" id="chartLegend"></div>
+          <div class="chart-grid" id="chartGrid"></div>
           <div class="chart-empty" id="chartEmpty" style="display:none;" data-i18n="chartEmpty">Nessun dato da visualizzare</div>
         </div>
       </section>
@@ -1072,19 +1253,19 @@
         <input type="hidden" id="editId">
 
         <div class="form-group">
-          <label for="dateTrigger" data-i18n="labelData">Data *</label>
-          <button type="button" class="date-input" id="dateTrigger">
-            <span id="inputDataDisplay">Seleziona data</span>
-            <span class="date-icon icon" id="dateIcon"></span>
-          </button>
-          <input type="hidden" id="inputData">
-          <div class="field-error" id="errorData"></div>
+          <label for="inputImporto" data-i18n="labelImporto">Importo *</label>
+          <div class="importo-row">
+            <select id="inputCurrency" aria-label="Valuta"></select>
+            <input type="text" id="inputImporto" inputmode="decimal" placeholder="0" required>
+          </div>
+          <div class="field-error" id="errorImporto"></div>
         </div>
 
         <div class="form-group">
           <label for="inputCausale" data-i18n="labelCausale">Causale *</label>
           <div class="causale-row">
             <select id="inputCausale" required></select>
+            <button type="button" class="btn-icon danger" id="deleteCausaleBtn" data-i18n-title="deleteCausaleTitle" data-i18n-aria="deleteCausaleTitle" title="Elimina causale" aria-label="Elimina causale"></button>
           </div>
           <div class="add-tag-row">
             <input type="text" id="newCausale" data-i18n-placeholder="addCausalePlaceholder" placeholder="Aggiungi nuova causale…" maxlength="40">
@@ -1094,12 +1275,13 @@
         </div>
 
         <div class="form-group">
-          <label for="inputImporto" data-i18n="labelImporto">Importo *</label>
-          <div class="importo-row">
-            <select id="inputCurrency" aria-label="Valuta"></select>
-            <input type="text" id="inputImporto" inputmode="decimal" placeholder="0" required>
-          </div>
-          <div class="field-error" id="errorImporto"></div>
+          <label for="dateTrigger" data-i18n="labelData">Data *</label>
+          <button type="button" class="date-input" id="dateTrigger">
+            <span id="inputDataDisplay">Seleziona data</span>
+            <span class="date-icon icon" id="dateIcon"></span>
+          </button>
+          <input type="hidden" id="inputData">
+          <div class="field-error" id="errorData"></div>
         </div>
 
         <div class="form-group">
@@ -1149,6 +1331,10 @@
           <select id="themeSelect" aria-label="Tema"></select>
         </div>
       </div>
+      <div class="settings-section">
+        <div class="settings-section-title" data-i18n="settingsCausali">Causali personalizzate</div>
+        <div class="causali-manage-list" id="causaliList"></div>
+      </div>
       <div class="modal-actions">
         <button type="button" class="btn-primary" id="settingsCloseBtn" data-i18n="btnClose">Chiudi</button>
       </div>
@@ -1160,6 +1346,22 @@
     <div class="modal confirm-modal" role="alertdialog" aria-modal="true" aria-labelledby="confirmMessage">
       <p class="confirm-message" id="confirmMessage"></p>
       <div class="modal-actions" id="confirmActions"></div>
+    </div>
+  </div>
+
+  <!-- Enlarged chart modal -->
+  <div class="modal-overlay" id="chartModalOverlay">
+    <div class="modal chart-modal" role="dialog" aria-modal="true" aria-labelledby="chartModalTitle">
+      <h2 id="chartModalTitle"></h2>
+      <div class="chart-wrapper">
+        <div class="chart-canvas-box chart-canvas-box-lg">
+          <canvas id="chartModalCanvas"></canvas>
+        </div>
+        <div class="chart-legend" id="chartModalLegend"></div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-primary" id="chartModalCloseBtn" data-i18n="btnClose">Chiudi</button>
+      </div>
     </div>
   </div>
 
@@ -1239,6 +1441,7 @@
       selectDate: "Seleziona data",
       addCausalePlaceholder: "Aggiungi nuova causale…",
       addCausaleTitle: "Aggiungi causale",
+      deleteCausaleTitle: "Elimina causale",
       notePlaceholder: "Note opzionali…",
       btnCancel: "Annulla",
       btnSave: "Salva",
@@ -1262,12 +1465,16 @@
       footerLastMod: "Ultima modifica: ",
       confirmDelete: "Sei sicuro di eliminare questo income?",
       alertExportEmpty: "Nessun dato da esportare.",
-      alertImportSoon: "Importazione da JSON in arrivo: funzionalità non ancora disponibile.",
       editLabel: "Modifica",
       deleteLabel: "Elimina",
       settingsTitle: "Opzioni",
       settingsLang: "Lingua",
       settingsTheme: "Tema",
+      settingsCausali: "Causali personalizzate",
+      causaliManageEmpty: "Nessuna causale personalizzata",
+      confirmDeleteCausale: 'Eliminare la causale "{c}"? Gli income già registrati non saranno modificati.',
+      confirmImport: "Importare {n} income nei dati esistenti?",
+      alertImportError: "File non valido. Seleziona un export JSON di MoneyBox.",
       months: ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"],
       weekdays: ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"],
       themeNames: { light: "Chiaro", dark: "Scuro", ocean: "Oceano", forest: "Foresta", sunset: "Tramonto" },
@@ -1292,6 +1499,7 @@
       selectDate: "Select date",
       addCausalePlaceholder: "Add new category…",
       addCausaleTitle: "Add category",
+      deleteCausaleTitle: "Delete category",
       notePlaceholder: "Optional notes…",
       btnCancel: "Cancel",
       btnSave: "Save",
@@ -1315,12 +1523,16 @@
       footerLastMod: "Last update: ",
       confirmDelete: "Are you sure you want to delete this income?",
       alertExportEmpty: "No data to export.",
-      alertImportSoon: "JSON import coming soon: feature not available yet.",
       editLabel: "Edit",
       deleteLabel: "Delete",
       settingsTitle: "Settings",
       settingsLang: "Language",
       settingsTheme: "Theme",
+      settingsCausali: "Custom categories",
+      causaliManageEmpty: "No custom categories",
+      confirmDeleteCausale: 'Delete category "{c}"? Existing income entries will not be changed.',
+      confirmImport: "Import {n} income entries into the existing data?",
+      alertImportError: "Invalid file. Select a MoneyBox JSON export.",
       months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
       weekdays: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
       themeNames: { light: "Light", dark: "Dark", ocean: "Ocean", forest: "Forest", sunset: "Sunset" },
@@ -1345,6 +1557,7 @@
       selectDate: "Выберите дату",
       addCausalePlaceholder: "Добавить новую категорию…",
       addCausaleTitle: "Добавить категорию",
+      deleteCausaleTitle: "Удалить категорию",
       notePlaceholder: "Необязательные заметки…",
       btnCancel: "Отмена",
       btnSave: "Сохранить",
@@ -1368,12 +1581,16 @@
       footerLastMod: "Последнее изменение: ",
       confirmDelete: "Вы уверены, что хотите удалить этот доход?",
       alertExportEmpty: "Нет данных для экспорта.",
-      alertImportSoon: "Импорт из JSON скоро появится: функция еще не реализована.",
       editLabel: "Изменить",
       deleteLabel: "Удалить",
       settingsTitle: "Настройки",
       settingsLang: "Язык",
       settingsTheme: "Тема",
+      settingsCausali: "Пользовательские категории",
+      causaliManageEmpty: "Нет пользовательских категорий",
+      confirmDeleteCausale: 'Удалить категорию "{c}"? Существующие записи не изменятся.',
+      confirmImport: "Импортировать {n} записей в существующие данные?",
+      alertImportError: "Недействительный файл. Выберите экспорт JSON MoneyBox.",
       months: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
       weekdays: ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"],
       themeNames: { light: "Светлая", dark: "Тёмная", ocean: "Океан", forest: "Лес", sunset: "Закат" },
@@ -1398,6 +1615,7 @@
       selectDate: "Seleccionar fecha",
       addCausalePlaceholder: "Añadir nueva categoría…",
       addCausaleTitle: "Añadir categoría",
+      deleteCausaleTitle: "Eliminar categoría",
       notePlaceholder: "Notas opcionales…",
       btnCancel: "Cancelar",
       btnSave: "Guardar",
@@ -1421,12 +1639,16 @@
       footerLastMod: "Última modificación: ",
       confirmDelete: "¿Seguro que quieres eliminar este ingreso?",
       alertExportEmpty: "No hay datos para exportar.",
-      alertImportSoon: "Importación desde JSON próximamente: función no disponible todavía.",
       editLabel: "Editar",
       deleteLabel: "Eliminar",
       settingsTitle: "Opciones",
       settingsLang: "Idioma",
       settingsTheme: "Tema",
+      settingsCausali: "Categorías personalizadas",
+      causaliManageEmpty: "Sin categorías personalizadas",
+      confirmDeleteCausale: 'Eliminar la categoría "{c}"? Los ingresos ya registrados no se modificarán.',
+      confirmImport: "¿Importar {n} ingresos a los datos existentes?",
+      alertImportError: "Archivo no válido. Selecciona una exportación JSON de MoneyBox.",
       months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
       weekdays: ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"],
       themeNames: { light: "Claro", dark: "Oscuro", ocean: "Océano", forest: "Bosque", sunset: "Atardecer" },
@@ -1451,6 +1673,7 @@
       selectDate: "Choisir une date",
       addCausalePlaceholder: "Ajouter une nouvelle catégorie…",
       addCausaleTitle: "Ajouter une catégorie",
+      deleteCausaleTitle: "Supprimer la catégorie",
       notePlaceholder: "Notes facultatives…",
       btnCancel: "Annuler",
       btnSave: "Enregistrer",
@@ -1474,12 +1697,16 @@
       footerLastMod: "Dernière modification : ",
       confirmDelete: "Voulez-vous vraiment supprimer ce revenu ?",
       alertExportEmpty: "Aucune donnée à exporter.",
-      alertImportSoon: "Importation JSON à venir : fonctionnalité pas encore disponible.",
       editLabel: "Modifier",
       deleteLabel: "Supprimer",
       settingsTitle: "Options",
       settingsLang: "Langue",
       settingsTheme: "Thème",
+      settingsCausali: "Catégories personnalisées",
+      causaliManageEmpty: "Aucune catégorie personnalisée",
+      confirmDeleteCausale: 'Supprimer la catégorie "{c}" ? Les revenus déjà enregistrés ne seront pas modifiés.',
+      confirmImport: "Importer {n} revenus dans les données existantes ?",
+      alertImportError: "Fichier invalide. Sélectionnez un export JSON de MoneyBox.",
       months: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
       weekdays: ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"],
       themeNames: { light: "Clair", dark: "Sombre", ocean: "Océan", forest: "Forêt", sunset: "Coucher de soleil" },
@@ -1504,6 +1731,7 @@
       selectDate: "Datum wählen",
       addCausalePlaceholder: "Neue Kategorie hinzufügen…",
       addCausaleTitle: "Kategorie hinzufügen",
+      deleteCausaleTitle: "Kategorie löschen",
       notePlaceholder: "Optionale Notizen…",
       btnCancel: "Abbrechen",
       btnSave: "Speichern",
@@ -1527,12 +1755,16 @@
       footerLastMod: "Letzte Änderung: ",
       confirmDelete: "Möchtest du diese Einnahme wirklich löschen?",
       alertExportEmpty: "Keine Daten zum Exportieren.",
-      alertImportSoon: "JSON-Import folgt in Kürze: Funktion noch nicht verfügbar.",
       editLabel: "Bearbeiten",
       deleteLabel: "Löschen",
       settingsTitle: "Einstellungen",
       settingsLang: "Sprache",
       settingsTheme: "Thema",
+      settingsCausali: "Eigene Kategorien",
+      causaliManageEmpty: "Keine eigenen Kategorien",
+      confirmDeleteCausale: 'Kategorie "{c}" löschen? Bereits erfasste Einnahmen werden nicht geändert.',
+      confirmImport: "{n} Einnahmen zu den bestehenden Daten importieren?",
+      alertImportError: "Ungültige Datei. Wähle einen MoneyBox-JSON-Export.",
       months: ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
       weekdays: ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"],
       themeNames: { light: "Hell", dark: "Dunkel", ocean: "Ozean", forest: "Wald", sunset: "Sonnenuntergang" },
@@ -1548,8 +1780,87 @@
   }
 
   /* ---------- State ---------- */
-  let state = { income: [], causali_custom: [] };
-  let chart = null;
+  let state = { income: [], causali_custom: [], chartCurrencyOrder: [], statsCurrencyOrder: [] };
+  let charts = {};
+  let modalChart = null;
+  const expandedChartCurrencies = new Set();
+  const expandedStatsCurrencies = new Set();
+  let chartGroupInitialized = false;
+  let statsGroupInitialized = false;
+
+  function orderCurrencies(currencies, savedOrder) {
+    const ordered = [];
+    (savedOrder || []).forEach((c) => { if (currencies.includes(c) && !ordered.includes(c)) ordered.push(c); });
+    currencies.forEach((c) => { if (!ordered.includes(c)) ordered.push(c); });
+    return ordered;
+  }
+
+  function animateReorder(group, dragEl, mutate) {
+    const items = Array.from(group.children).filter((node) => node !== dragEl);
+    const firstRects = items.map((node) => node.getBoundingClientRect());
+    mutate();
+    items.forEach((node, idx) => {
+      const first = firstRects[idx];
+      const last = node.getBoundingClientRect();
+      const dx = first.left - last.left;
+      const dy = first.top - last.top;
+      if (!dx && !dy) return;
+      node.style.transition = "none";
+      node.style.transform = `translate(${dx}px, ${dy}px)`;
+      requestAnimationFrame(() => {
+        node.style.transition = "transform 0.22s ease";
+        node.style.transform = "";
+      });
+    });
+  }
+
+  function setupDragReorder(container, onReorder) {
+    let dragEl = null;
+    let dragGhost = null;
+    container.addEventListener("dragstart", (e) => {
+      const item = e.target.closest(".currency-collapse-item");
+      if (!item) return;
+      dragEl = item;
+      e.dataTransfer.effectAllowed = "move";
+      e.dataTransfer.setData("text/plain", item.dataset.currency);
+      const handle = item.querySelector(".currency-toggle-btn");
+      if (handle) {
+        dragGhost = handle.cloneNode(true);
+        dragGhost.style.position = "absolute";
+        dragGhost.style.top = "-9999px";
+        dragGhost.style.left = "-9999px";
+        dragGhost.style.width = `${handle.offsetWidth}px`;
+        dragGhost.style.pointerEvents = "none";
+        document.body.appendChild(dragGhost);
+        e.dataTransfer.setDragImage(dragGhost, dragGhost.offsetWidth / 2, dragGhost.offsetHeight / 2);
+      }
+      requestAnimationFrame(() => item.classList.add("dragging"));
+    });
+    container.addEventListener("dragend", () => {
+      if (dragEl) dragEl.classList.remove("dragging");
+      if (dragGhost) { dragGhost.remove(); dragGhost = null; }
+      dragEl = null;
+    });
+    container.addEventListener("dragover", (e) => {
+      if (!dragEl) return;
+      e.preventDefault();
+      const target = e.target.closest(".currency-collapse-item");
+      const group = dragEl.parentElement;
+      if (!target || target === dragEl || target.parentElement !== group) return;
+      const rect = target.getBoundingClientRect();
+      const before = e.clientY - rect.top < rect.height / 2;
+      const ref = before ? target : target.nextSibling;
+      if (dragEl.nextSibling === ref) return;
+      animateReorder(group, dragEl, () => group.insertBefore(dragEl, ref));
+    });
+    container.addEventListener("drop", (e) => {
+      if (!dragEl) return;
+      e.preventDefault();
+      const group = dragEl.parentElement;
+      const order = Array.from(group.children).map((node) => node.dataset.currency);
+      onReorder(order);
+    });
+  }
   let dpViewDate = new Date();
   let lastCurrency = "EUR";
   const colorMap = {};
@@ -1562,8 +1873,12 @@
     filterCausale: $("filterCausale"),
     inputCausale: $("inputCausale"),
     chartEmpty: $("chartEmpty"),
-    chartCanvas: $("pieChart"),
-    chartLegend: $("chartLegend"),
+    chartGrid: $("chartGrid"),
+    chartModalOverlay: $("chartModalOverlay"),
+    chartModalTitle: $("chartModalTitle"),
+    chartModalCanvas: $("chartModalCanvas"),
+    chartModalLegend: $("chartModalLegend"),
+    chartModalCloseBtn: $("chartModalCloseBtn"),
     statsBox: $("statsBox"),
     breakdownBox: $("breakdownBox"),
     lastModified: $("lastModified"),
@@ -1578,12 +1893,14 @@
     inputCurrency: $("inputCurrency"),
     inputNote: $("inputNote"),
     newCausale: $("newCausale"),
+    deleteCausaleBtn: $("deleteCausaleBtn"),
     settingsBtn: $("settingsBtn"),
     settingsOverlay: $("settingsOverlay"),
     settingsCloseBtn: $("settingsCloseBtn"),
     langSelect: $("langSelect"),
     themeSelect: $("themeSelect"),
     themeSwatchPreview: $("themeSwatchPreview"),
+    causaliList: $("causaliList"),
     datePickerOverlay: $("datePickerOverlay"),
     dpTitle: $("dpTitle"),
     dpWeekdays: $("dpWeekdays"),
@@ -1606,6 +1923,7 @@
     $("filterIcon").innerHTML = ICONS.filter;
     $("dateIcon").innerHTML = ICONS.calendar;
     $("addCausaleBtn").innerHTML = ICONS.plus;
+    el.deleteCausaleBtn.innerHTML = ICONS.trash;
     $("addBtnIcon").innerHTML = ICONS.plus;
     el.importBtn.innerHTML = ICONS.upload;
     el.exportBtn.innerHTML = ICONS.download;
@@ -1684,11 +2002,34 @@
   function openSettings() {
     renderLangSelect();
     renderThemeSelect();
+    renderCausaliManageList();
     el.settingsOverlay.classList.add("active");
   }
 
   function closeSettings() {
     el.settingsOverlay.classList.remove("active");
+  }
+
+  /* ---------- Causali management (settings) ---------- */
+  function renderCausaliManageList() {
+    if (!state.causali_custom.length) {
+      el.causaliList.innerHTML = `<div class="breakdown-empty">${escapeHtml(t("causaliManageEmpty"))}</div>`;
+      return;
+    }
+    el.causaliList.innerHTML = state.causali_custom.map((c) => `
+      <div class="causale-manage-item">
+        <span>${escapeHtml(c)}</span>
+        <button type="button" class="btn-icon danger" data-delete-causale="${escapeHtml(c)}" title="${escapeHtml(t("deleteLabel"))}" aria-label="${escapeHtml(t("deleteLabel"))} ${escapeHtml(c)}"><span class="icon">${ICONS.trash}</span></button>
+      </div>`).join("");
+  }
+
+  async function handleDeleteCausale(name) {
+    const ok = await showConfirm(t("confirmDeleteCausale").replace("{c}", name));
+    if (!ok) return;
+    state.causali_custom = state.causali_custom.filter((c) => c !== name);
+    saveToStorage();
+    renderCausaliManageList();
+    render();
   }
 
   /* ---------- Utilities ---------- */
@@ -1711,12 +2052,28 @@
     return { group, decimal };
   }
 
+  // Riconosce sia "." che "," come separatore decimale (es. tastiere numeriche
+  // che offrono solo il punto), indipendentemente dalla lingua attiva: l'ultimo
+  // separatore trovato è il decimale solo se seguito da 0-2 sole cifre, altrimenti
+  // tutti i separatori sono trattati come raggruppamento delle migliaia e ignorati.
+  function splitAmountParts(raw) {
+    if (!raw) return { intDigits: "", decDigits: null };
+    const sepIndex = Math.max(raw.lastIndexOf("."), raw.lastIndexOf(","));
+    if (sepIndex === -1) return { intDigits: raw.replace(/\D/g, ""), decDigits: null };
+    const after = raw.slice(sepIndex + 1);
+    const afterDigits = after.replace(/\D/g, "");
+    if (after === afterDigits && afterDigits.length <= 2) {
+      return { intDigits: raw.slice(0, sepIndex).replace(/\D/g, ""), decDigits: afterDigits };
+    }
+    return { intDigits: raw.replace(/\D/g, ""), decDigits: null };
+  }
+
   function parseAmountInput(raw) {
     if (!raw) return NaN;
-    const { group, decimal } = getNumberFormatParts(LOCALE_MAP[currentLang] || "it-IT");
-    let s = raw.split(group).join("");
-    if (decimal !== ".") s = s.split(decimal).join(".");
-    return parseFloat(s);
+    const { intDigits, decDigits } = splitAmountParts(raw);
+    if (intDigits === "" && !decDigits) return NaN;
+    const intPart = intDigits === "" ? "0" : intDigits;
+    return parseFloat(decDigits !== null ? `${intPart}.${decDigits}` : intPart);
   }
 
   function formatAmountForInput(n, locale) {
@@ -1730,19 +2087,11 @@
   }
 
   function liveFormatAmountInput(raw, locale) {
-    const { group, decimal } = getNumberFormatParts(locale);
-    let s = raw.split(group).join("");
-    const decimalIndex = s.indexOf(decimal);
-    let intPart, decPart = null;
-    if (decimalIndex !== -1) {
-      intPart = s.slice(0, decimalIndex).replace(/\D/g, "");
-      decPart = s.slice(decimalIndex + decimal.length).replace(/\D/g, "").slice(0, 2);
-    } else {
-      intPart = s.replace(/\D/g, "");
-    }
-    let formattedInt = intPart === "" ? "" : Number(intPart).toLocaleString(locale);
+    const { decimal } = getNumberFormatParts(locale);
+    const { intDigits, decDigits } = splitAmountParts(raw);
+    const formattedInt = intDigits === "" ? "" : Number(intDigits).toLocaleString(locale);
     let result = formattedInt;
-    if (decimalIndex !== -1) result += decimal + decPart;
+    if (decDigits !== null) result += decimal + decDigits;
     return result;
   }
 
@@ -1790,6 +2139,8 @@
         const parsed = JSON.parse(raw);
         state.income = Array.isArray(parsed.income) ? parsed.income : [];
         state.causali_custom = Array.isArray(parsed.causali_custom) ? parsed.causali_custom : [];
+        state.chartCurrencyOrder = Array.isArray(parsed.chartCurrencyOrder) ? parsed.chartCurrencyOrder : [];
+        state.statsCurrencyOrder = Array.isArray(parsed.statsCurrencyOrder) ? parsed.statsCurrencyOrder : [];
         return true;
       } catch (e) {
         console.error("Errore parsing storage:", e);
@@ -1915,35 +2266,46 @@
     return map;
   }
 
-  function renderChart() {
-    const agg = aggregateByCausaleCurrency();
-    const multi = hasMultipleCurrencies();
-    const keys = Object.keys(agg).filter((k) => agg[k].total > 0);
-    const labels = keys.map((k) => multi ? `${agg[k].causale} (${agg[k].currency})` : agg[k].causale);
-    const data = keys.map((k) => agg[k].total);
-    const currencyTotals = aggregateByCurrency();
+  function causaleKeysForCurrency(agg, currency) {
+    return Object.keys(agg).filter((k) => agg[k].currency === currency && agg[k].total > 0);
+  }
 
-    if (keys.length === 0) {
-      el.chartCanvas.style.display = "none";
-      el.chartEmpty.style.display = "block";
-      el.chartLegend.innerHTML = "";
-      if (chart) { chart.destroy(); chart = null; }
+  let chartTooltipEl = null;
+  function getChartTooltipEl() {
+    if (!chartTooltipEl) {
+      chartTooltipEl = document.createElement("div");
+      chartTooltipEl.className = "chartjs-tooltip";
+      document.body.appendChild(chartTooltipEl);
+    }
+    return chartTooltipEl;
+  }
+
+  function externalTooltipHandler(context) {
+    const { chart, tooltip } = context;
+    const tooltipEl = getChartTooltipEl();
+    if (tooltip.opacity === 0) {
+      tooltipEl.style.opacity = "0";
       return;
     }
+    const lines = [...(tooltip.title || []), ...tooltip.body.flatMap((b) => b.lines)];
+    tooltipEl.innerHTML = lines.map((l) => `<div>${escapeHtml(l)}</div>`).join("");
+    const rect = chart.canvas.getBoundingClientRect();
+    tooltipEl.style.opacity = "1";
+    tooltipEl.style.left = `${rect.left + tooltip.caretX}px`;
+    tooltipEl.style.top = `${rect.top + tooltip.caretY}px`;
+  }
 
-    el.chartCanvas.style.display = "block";
-    el.chartEmpty.style.display = "none";
-
+  function buildPieChart(canvas, keys, agg, currency) {
+    const data = keys.map((k) => agg[k].total);
     const colors = keys.map((k) => colorFor(agg[k].causale));
+    const total = data.reduce((sum, v) => sum + v, 0);
     const chartBg = getComputedStyle(document.body)
       .getPropertyValue("--color-chart-bg").trim() || "#fff";
 
-    if (chart) { chart.destroy(); chart = null; }
-
-    chart = new Chart(el.chartCanvas, {
+    return new Chart(canvas, {
       type: "pie",
       data: {
-        labels: labels,
+        labels: keys.map((k) => agg[k].causale),
         datasets: [{
           data: data,
           backgroundColor: colors,
@@ -1957,30 +2319,103 @@
         plugins: {
           legend: { display: false },
           tooltip: {
+            enabled: false,
+            position: "nearest",
+            external: externalTooltipHandler,
             callbacks: {
               label(ctx) {
-                const k = keys[ctx.dataIndex];
-                const tot = currencyTotals[agg[k].currency] || 0;
-                const pct = tot ? ((ctx.parsed / tot) * 100).toFixed(1) : 0;
-                return ` ${formatAmount(ctx.parsed, agg[k].currency)} (${pct}%)`;
+                const pct = total ? ((ctx.parsed / total) * 100).toFixed(1) : 0;
+                return ` ${formatAmount(ctx.parsed, currency)} (${pct}%)`;
               }
             }
           }
         }
       }
     });
+  }
 
-    // Custom HTML legend — always readable, follows --color-text via CSS
-    el.chartLegend.innerHTML = keys.map((k, idx) => {
-      const tot = currencyTotals[agg[k].currency] || 0;
-      const pct = tot ? ((data[idx] / tot) * 100).toFixed(1) : 0;
+  function renderChart() {
+    const agg = aggregateByCausaleCurrency();
+    const currencyTotals = aggregateByCurrency();
+    const currencies = Object.keys(currencyTotals).filter((c) => currencyTotals[c] > 0);
+
+    Object.values(charts).forEach((c) => c.destroy());
+    charts = {};
+
+    if (currencies.length === 0) {
+      el.chartGrid.innerHTML = "";
+      el.chartGrid.style.display = "none";
+      el.chartEmpty.style.display = "block";
+      return;
+    }
+
+    el.chartGrid.style.display = "flex";
+    el.chartEmpty.style.display = "none";
+
+    const ordered = orderCurrencies(currencies, state.chartCurrencyOrder);
+    if (!chartGroupInitialized) {
+      expandedChartCurrencies.add(ordered[0]);
+      chartGroupInitialized = true;
+    }
+
+    const miniHtml = (c) => `
+      <button type="button" class="chart-mini" data-currency="${escapeHtml(c)}">
+        <span class="chart-mini-title">${escapeHtml(c)}</span>
+        <span class="chart-canvas-box"><canvas></canvas></span>
+        <span class="chart-mini-total">${formatAmount(currencyTotals[c], c)}</span>
+      </button>`;
+
+    el.chartGrid.innerHTML = `<div class="currency-collapse-group">` + ordered.map((c) => {
+      const isOpen = expandedChartCurrencies.has(c);
+      return `
+        <div class="currency-collapse-item${isOpen ? " open" : ""}" draggable="true" data-currency="${escapeHtml(c)}">
+          <button type="button" class="currency-toggle-btn" data-toggle-chart-currency="${escapeHtml(c)}" aria-expanded="${isOpen}">
+            <span class="drag-handle" aria-hidden="true">⠿</span>
+            <span>${escapeHtml(c)}</span>
+            <span class="currency-toggle-arrow">▾</span>
+          </button>
+          <div class="currency-collapse-body">${miniHtml(c)}</div>
+        </div>`;
+    }).join("") + `</div>`;
+
+    ordered.filter((c) => expandedChartCurrencies.has(c)).forEach((c) => {
+      const canvas = el.chartGrid.querySelector(`.chart-mini[data-currency="${c}"] canvas`);
+      if (!canvas) return;
+      const keys = causaleKeysForCurrency(agg, c);
+      charts[c] = buildPieChart(canvas, keys, agg, c);
+    });
+  }
+
+  function openChartModal(currency) {
+    const agg = aggregateByCausaleCurrency();
+    const keys = causaleKeysForCurrency(agg, currency);
+    if (keys.length === 0) return;
+
+    const data = keys.map((k) => agg[k].total);
+    const colors = keys.map((k) => colorFor(agg[k].causale));
+    const total = data.reduce((sum, v) => sum + v, 0);
+
+    el.chartModalTitle.textContent = `${t("panelDistribuzione")} — ${currency}`;
+
+    if (modalChart) { modalChart.destroy(); modalChart = null; }
+    modalChart = buildPieChart(el.chartModalCanvas, keys, agg, currency);
+
+    el.chartModalLegend.innerHTML = keys.map((k, idx) => {
+      const pct = total ? ((data[idx] / total) * 100).toFixed(1) : 0;
       return `
         <div class="chart-legend-item">
           <span class="dot" style="background:${colors[idx]}"></span>
-          <span>${escapeHtml(labels[idx])}</span>
+          <span>${escapeHtml(agg[k].causale)}</span>
           <span class="pct">${pct}%</span>
         </div>`;
     }).join("");
+
+    el.chartModalOverlay.classList.add("active");
+  }
+
+  function closeChartModal() {
+    el.chartModalOverlay.classList.remove("active");
+    if (modalChart) { modalChart.destroy(); modalChart = null; }
   }
 
   function renderBreakdown() {
@@ -2024,16 +2459,19 @@
       (byCurrency[c] = byCurrency[c] || []).push(Number(i.importo));
     });
     const currencies = Object.keys(byCurrency);
-    const multi = currencies.length > 1;
+    const ordered = orderCurrencies(currencies, state.statsCurrencyOrder);
+    if (!statsGroupInitialized) {
+      expandedStatsCurrencies.add(ordered[0]);
+      statsGroupInitialized = true;
+    }
 
-    el.statsBox.innerHTML = currencies.map((c) => {
+    const statsHtml = (c) => {
       const importi = byCurrency[c];
       const total = importi.reduce((a, b) => a + b, 0);
       const media = total / importi.length;
       const max = Math.max(...importi);
       const count = importi.length;
-      const header = multi ? `<div class="stats-currency-label">${escapeHtml(c)}</div>` : "";
-      return `${header}
+      return `
         <div class="stat-box">
           <div class="stat-label">${escapeHtml(t("statTransazioni"))}</div>
           <div class="stat-value">${count}</div>
@@ -2046,7 +2484,20 @@
           <div class="stat-label">${escapeHtml(t("statImportoMax"))}</div>
           <div class="stat-value">${formatAmount(max, c)}</div>
         </div>`;
-    }).join("");
+    };
+
+    el.statsBox.innerHTML = `<div class="currency-collapse-group">` + ordered.map((c) => {
+      const isOpen = expandedStatsCurrencies.has(c);
+      return `
+        <div class="currency-collapse-item${isOpen ? " open" : ""}" draggable="true" data-currency="${escapeHtml(c)}">
+          <button type="button" class="currency-toggle-btn" data-toggle-stats-currency="${escapeHtml(c)}" aria-expanded="${isOpen}">
+            <span class="drag-handle" aria-hidden="true">⠿</span>
+            <span>${escapeHtml(c)}</span>
+            <span class="currency-toggle-arrow">▾</span>
+          </button>
+          <div class="currency-collapse-body"><div class="stats-group">${statsHtml(c)}</div></div>
+        </div>`;
+    }).join("") + `</div>`;
   }
 
   function populateCausaliSelects() {
@@ -2071,6 +2522,13 @@
       el.inputCausale.appendChild(o);
     });
     if (causali.includes(currentInput)) el.inputCausale.value = currentInput;
+    updateDeleteCausaleBtnState();
+  }
+
+  function updateDeleteCausaleBtnState() {
+    const isCustom = state.causali_custom.includes(el.inputCausale.value);
+    el.deleteCausaleBtn.disabled = !isCustom;
+    el.deleteCausaleBtn.style.visibility = isCustom ? "visible" : "hidden";
   }
 
   /* ---------- Modal ---------- */
@@ -2086,6 +2544,7 @@
       el.inputCurrency.value = income.currency || "EUR";
       el.inputImporto.value = formatAmountForInput(income.importo, locale);
       el.inputNote.value = income.note || "";
+      updateDeleteCausaleBtnState();
     } else {
       el.modalTitle.textContent = t("modalTitleAdd");
       el.editId.value = "";
@@ -2196,6 +2655,7 @@
     el.inputCausale.value = name;
     el.newCausale.value = "";
     $("errorCausale").textContent = "";
+    updateDeleteCausaleBtnState();
   }
 
   function handleSubmit(e) {
@@ -2256,7 +2716,64 @@
   }
 
   function importData() {
-    showAlert(t("alertImportSoon"));
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "application/json,.json";
+    input.addEventListener("change", () => {
+      const file = input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => processImportedJSON(reader.result);
+      reader.onerror = () => showAlert(t("alertImportError"));
+      reader.readAsText(file);
+    });
+    input.click();
+  }
+
+  async function processImportedJSON(text) {
+    let parsed;
+    try {
+      parsed = JSON.parse(text);
+    } catch (e) {
+      showAlert(t("alertImportError"));
+      return;
+    }
+    if (!parsed || !Array.isArray(parsed.income)) {
+      showAlert(t("alertImportError"));
+      return;
+    }
+    const validRecords = parsed.income.filter((r) =>
+      r && typeof r.data === "string" && typeof r.causale === "string" && r.causale.trim() && !isNaN(Number(r.importo))
+    );
+    if (validRecords.length === 0) {
+      showAlert(t("alertImportError"));
+      return;
+    }
+    const importedCausali = Array.isArray(parsed.causali_custom)
+      ? parsed.causali_custom.filter((c) => typeof c === "string" && c.trim())
+      : [];
+
+    const ok = await showConfirm(t("confirmImport").replace("{n}", validRecords.length), "btnSave");
+    if (!ok) return;
+
+    validRecords.forEach((r) => {
+      state.income.push({
+        id: uid(),
+        data: r.data,
+        causale: r.causale.trim(),
+        importo: Math.round(Number(r.importo) * 100) / 100,
+        currency: typeof r.currency === "string" && r.currency ? r.currency : "EUR",
+        note: typeof r.note === "string" ? r.note : ""
+      });
+    });
+    importedCausali.forEach((c) => {
+      if (!allCausali().includes(c) && !state.causali_custom.includes(c)) {
+        state.causali_custom.push(c);
+      }
+    });
+
+    saveToStorage();
+    render();
   }
 
   /* ---------- Theme ---------- */
@@ -2265,7 +2782,8 @@
     localStorage.setItem(THEME_KEY, theme);
     if (el.settingsOverlay.classList.contains("active")) renderThemeSelect();
     else updateThemeSwatchPreview();
-    if (chart) renderChart(); // refresh legend/border colors
+    if (Object.keys(charts).length) renderChart(); // refresh legend/border colors
+    if (el.chartModalOverlay.classList.contains("active")) closeChartModal();
   }
 
   function initTheme() {
@@ -2345,6 +2863,8 @@
     $("addBtn").addEventListener("click", () => openModal(null));
     $("cancelBtn").addEventListener("click", closeModal);
     $("addCausaleBtn").addEventListener("click", handleAddCausale);
+    el.inputCausale.addEventListener("change", updateDeleteCausaleBtnState);
+    el.deleteCausaleBtn.addEventListener("click", () => handleDeleteCausale(el.inputCausale.value));
     el.exportBtn.addEventListener("click", exportJSON);
     el.importBtn.addEventListener("click", importData);
     el.form.addEventListener("submit", handleSubmit);
@@ -2356,8 +2876,58 @@
     el.settingsOverlay.addEventListener("click", (e) => {
       if (e.target === el.settingsOverlay) closeSettings();
     });
+    el.causaliList.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-delete-causale]");
+      if (btn) handleDeleteCausale(btn.dataset.deleteCausale);
+    });
     el.confirmOverlay.addEventListener("click", (e) => {
       if (e.target === el.confirmOverlay) closeConfirm();
+    });
+
+    el.chartGrid.addEventListener("click", (e) => {
+      const toggleBtn = e.target.closest("[data-toggle-chart-currency]");
+      if (toggleBtn) {
+        const c = toggleBtn.dataset.toggleChartCurrency;
+        const item = toggleBtn.closest(".currency-collapse-item");
+        const isOpen = item.classList.toggle("open");
+        toggleBtn.setAttribute("aria-expanded", String(isOpen));
+        if (isOpen) {
+          expandedChartCurrencies.add(c);
+          if (!charts[c]) {
+            const canvas = item.querySelector(".chart-mini canvas");
+            const agg = aggregateByCausaleCurrency();
+            const keys = causaleKeysForCurrency(agg, c);
+            charts[c] = buildPieChart(canvas, keys, agg, c);
+          }
+        } else {
+          expandedChartCurrencies.delete(c);
+        }
+        return;
+      }
+      const btn = e.target.closest(".chart-mini");
+      if (btn) openChartModal(btn.dataset.currency);
+    });
+    el.statsBox.addEventListener("click", (e) => {
+      const toggleBtn = e.target.closest("[data-toggle-stats-currency]");
+      if (!toggleBtn) return;
+      const c = toggleBtn.dataset.toggleStatsCurrency;
+      const item = toggleBtn.closest(".currency-collapse-item");
+      const isOpen = item.classList.toggle("open");
+      toggleBtn.setAttribute("aria-expanded", String(isOpen));
+      if (isOpen) expandedStatsCurrencies.add(c);
+      else expandedStatsCurrencies.delete(c);
+    });
+    setupDragReorder(el.chartGrid, (order) => {
+      state.chartCurrencyOrder = order;
+      saveToStorage();
+    });
+    setupDragReorder(el.statsBox, (order) => {
+      state.statsCurrencyOrder = order;
+      saveToStorage();
+    });
+    el.chartModalCloseBtn.addEventListener("click", closeChartModal);
+    el.chartModalOverlay.addEventListener("click", (e) => {
+      if (e.target === el.chartModalOverlay) closeChartModal();
     });
     el.langSelect.addEventListener("change", (e) => setLang(e.target.value));
     el.themeSelect.addEventListener("change", (e) => applyTheme(e.target.value));
@@ -2413,6 +2983,8 @@
         closeConfirm();
       } else if (el.datePickerOverlay.classList.contains("active")) {
         closeDatePicker();
+      } else if (el.chartModalOverlay.classList.contains("active")) {
+        closeChartModal();
       } else if (el.modalOverlay.classList.contains("active")) {
         closeModal();
       } else if (el.settingsOverlay.classList.contains("active")) {

@@ -2,7 +2,33 @@
   "permissions": {
     "allow": [
       "Bash(start *)",
-      "Bash(python3 -)"
+      "Bash(python3 -)",
+      "Bash(git *)",
+      "Skill(run)",
+      "Bash(npm ls *)",
+      "Bash(node -e \"console.log\\(require.resolve\\('playwright'\\)\\)\")",
+      "Bash(chromium-cli --version)",
+      "Bash(python3 -c \"import playwright\")",
+      "Bash(python -c \"import playwright\")",
+      "Bash(pip show *)",
+      "Bash(python *)",
+      "Bash(node -e ' *)",
+      "Bash(node --check /tmp/script.js)",
+      "PowerShell(Out-Null *)",
+      "Bash(py -3.12 -c \"print\\('has 3.12'\\)\")",
+      "Bash(py -0)",
+      "PowerShell(pip install *)",
+      "Bash(pip index *)",
+      "Bash(node *)",
+      "PowerShell(where node; where npx; node --version 2>&1; npx --version 2>&1)",
+      "Bash(ls .claude/skills)",
+      "Bash(which chromium-cli *)",
+      "Bash(which chrome *)",
+      "Bash(which chromium *)",
+      "Bash(python3 *)",
+      "Bash(pip install *)",
+      "Bash(where python *)",
+      "Bash(pip list *)"
     ]
   }
 }
