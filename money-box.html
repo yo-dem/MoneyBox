@@ -21,6 +21,8 @@
     --color-row-even: #f8f8f8;
     --color-danger: #dc2626;
     --color-danger-hover: #b91c1c;
+    --color-warning: #f59e0b;
+    --color-warning-hover: #d97706;
     --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.15);
   }
@@ -39,6 +41,8 @@
     --color-row-even: #2d2d2d;
     --color-danger: #ef4444;
     --color-danger-hover: #dc2626;
+    --color-warning: #f59e0b;
+    --color-warning-hover: #d97706;
     --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.5);
   }
@@ -716,6 +720,30 @@
     color: var(--color-danger);
   }
 
+  .btn-warning {
+    background-color: var(--color-warning);
+    color: #ffffff;
+    padding: 11px 20px;
+    font-weight: 600;
+  }
+
+  .btn-warning:hover {
+    background-color: var(--color-warning-hover);
+  }
+
+  .card-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 120px;
+    border: 2px dashed var(--color-border);
+    border-radius: 12px;
+    background: transparent;
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+    font-style: italic;
+  }
+
   .btn-icon .icon { margin-right: 4px; }
 
   .btn-iconbtn {
@@ -804,6 +832,10 @@
     padding: 12px 14px;
     border-bottom: 1px solid var(--color-border);
     font-size: 0.9rem;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
   }
 
   tbody tr:nth-child(odd) { background-color: var(--color-row-odd); }
@@ -956,6 +988,15 @@
 
   .causale-row select { flex: 1; }
 
+  .causale-row .btn-icon {
+    width: 42px;
+    padding: 0;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .importo-row {
     display: flex;
     gap: 8px;
@@ -977,10 +1018,15 @@
   .add-tag-row input { flex: 1; }
 
   .add-tag-row button {
+    width: 42px;
+    padding: 0;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: var(--color-bg);
     border: 1px solid var(--color-border);
     color: var(--color-text);
-    padding: 0 14px;
     font-size: 1.2rem;
     line-height: 1;
   }
@@ -1199,6 +1245,7 @@
         <div class="toolbar-right">
           <button class="btn-iconbtn" id="importBtn" data-i18n-title="importTitle" data-i18n-aria="importTitle" title="Importa dati (JSON)" aria-label="Importa dati (JSON)"></button>
           <button class="btn-iconbtn" id="exportBtn" data-i18n-title="exportTitle" data-i18n-aria="exportTitle" title="Esporta dati (JSON)" aria-label="Esporta dati (JSON)"></button>
+          <button class="btn-warning" id="deductBtn"><span class="icon" id="deductBtnIcon"></span><span data-i18n="deductBtn">Riduci Patrimonio</span></button>
           <button class="btn-primary" id="addBtn"><span class="icon" id="addBtnIcon"></span><span data-i18n="addIncomeBtn">Aggiungi Income</span></button>
         </div>
       </div>
@@ -1222,16 +1269,11 @@
     <!-- Bottom: 3 panels of similar size -->
     <div class="bottom-grid">
       <section class="card panel">
-        <h3 class="panel-title" data-i18n="panelDistribuzione">Distribuzione patrimonio</h3>
-        <div class="chart-wrapper">
-          <div class="chart-grid" id="chartGrid"></div>
-          <div class="chart-empty" id="chartEmpty" style="display:none;" data-i18n="chartEmpty">Nessun dato da visualizzare</div>
-        </div>
+        <div class="card-placeholder">— disponibile in futuro —</div>
       </section>
 
       <section class="card panel">
-        <h3 class="panel-title" data-i18n="panelStatistiche">Statistiche</h3>
-        <div class="stats" id="statsBox"></div>
+        <div class="card-placeholder">— disponibile in futuro —</div>
       </section>
 
       <section class="card panel">
@@ -1432,6 +1474,8 @@
       importTitle: "Importa dati (JSON)",
       exportTitle: "Esporta dati (JSON)",
       addIncomeBtn: "Aggiungi Income",
+      deductBtn: "Riduci Patrimonio",
+      modalTitleDeduct: "Riduci Patrimonio",
       modalTitleAdd: "Aggiungi Income",
       modalTitleEdit: "Modifica Income",
       labelData: "Data *",
@@ -1490,6 +1534,8 @@
       importTitle: "Import data (JSON)",
       exportTitle: "Export data (JSON)",
       addIncomeBtn: "Add Income",
+      deductBtn: "Reduce Wealth",
+      modalTitleDeduct: "Reduce Wealth",
       modalTitleAdd: "Add Income",
       modalTitleEdit: "Edit Income",
       labelData: "Date *",
@@ -1548,6 +1594,8 @@
       importTitle: "Импорт данных (JSON)",
       exportTitle: "Экспорт данных (JSON)",
       addIncomeBtn: "Добавить доход",
+      deductBtn: "Уменьшить капитал",
+      modalTitleDeduct: "Уменьшить капитал",
       modalTitleAdd: "Добавить доход",
       modalTitleEdit: "Изменить доход",
       labelData: "Дата *",
@@ -1606,6 +1654,8 @@
       importTitle: "Importar datos (JSON)",
       exportTitle: "Exportar datos (JSON)",
       addIncomeBtn: "Añadir ingreso",
+      deductBtn: "Reducir patrimonio",
+      modalTitleDeduct: "Reducir patrimonio",
       modalTitleAdd: "Añadir ingreso",
       modalTitleEdit: "Editar ingreso",
       labelData: "Fecha *",
@@ -1664,6 +1714,8 @@
       importTitle: "Importer les données (JSON)",
       exportTitle: "Exporter les données (JSON)",
       addIncomeBtn: "Ajouter un revenu",
+      deductBtn: "Réduire le patrimoine",
+      modalTitleDeduct: "Réduire le patrimoine",
       modalTitleAdd: "Ajouter un revenu",
       modalTitleEdit: "Modifier le revenu",
       labelData: "Date *",
@@ -1722,6 +1774,8 @@
       importTitle: "Daten importieren (JSON)",
       exportTitle: "Daten exportieren (JSON)",
       addIncomeBtn: "Einnahme hinzufügen",
+      deductBtn: "Vermögen reduzieren",
+      modalTitleDeduct: "Vermögen reduzieren",
       modalTitleAdd: "Einnahme hinzufügen",
       modalTitleEdit: "Einnahme bearbeiten",
       labelData: "Datum *",
@@ -1863,6 +1917,7 @@
   }
   let dpViewDate = new Date();
   let lastCurrency = "EUR";
+  let deductionMode = false;
   const colorMap = {};
 
   /* ---------- DOM ---------- */
@@ -1872,14 +1927,11 @@
     tableBody: $("tableBody"),
     filterCausale: $("filterCausale"),
     inputCausale: $("inputCausale"),
-    chartEmpty: $("chartEmpty"),
-    chartGrid: $("chartGrid"),
     chartModalOverlay: $("chartModalOverlay"),
     chartModalTitle: $("chartModalTitle"),
     chartModalCanvas: $("chartModalCanvas"),
     chartModalLegend: $("chartModalLegend"),
     chartModalCloseBtn: $("chartModalCloseBtn"),
-    statsBox: $("statsBox"),
     breakdownBox: $("breakdownBox"),
     lastModified: $("lastModified"),
     modalOverlay: $("modalOverlay"),
@@ -1925,6 +1977,7 @@
     $("addCausaleBtn").innerHTML = ICONS.plus;
     el.deleteCausaleBtn.innerHTML = ICONS.trash;
     $("addBtnIcon").innerHTML = ICONS.plus;
+    $("deductBtnIcon").innerHTML = ICONS.trash;
     el.importBtn.innerHTML = ICONS.upload;
     el.exportBtn.innerHTML = ICONS.download;
     el.dpPrev.innerHTML = ICONS.chevronLeft;
@@ -2177,8 +2230,6 @@
   function render() {
     renderPatrimonio();
     renderTable();
-    renderChart();
-    renderStats();
     renderBreakdown();
     populateCausaliSelects();
   }
@@ -2558,7 +2609,14 @@
     setTimeout(() => el.dateTrigger.focus(), 50);
   }
 
+  function openDeductModal() {
+    deductionMode = true;
+    openModal(null);
+    el.modalTitle.textContent = t("modalTitleDeduct");
+  }
+
   function closeModal() {
+    deductionMode = false;
     el.modalOverlay.classList.remove("active");
   }
 
@@ -2664,11 +2722,12 @@
 
     const id = el.editId.value;
     const currency = el.inputCurrency.value || "EUR";
+    const rawAmount = Math.round(parseAmountInput(el.inputImporto.value) * 100) / 100;
     const record = {
       id: id || uid(),
       data: el.inputData.value,
       causale: el.inputCausale.value,
-      importo: Math.round(parseAmountInput(el.inputImporto.value) * 100) / 100,
+      importo: deductionMode ? -rawAmount : rawAmount,
       currency: currency,
       note: el.inputNote.value.trim()
     };
@@ -2782,7 +2841,6 @@
     localStorage.setItem(THEME_KEY, theme);
     if (el.settingsOverlay.classList.contains("active")) renderThemeSelect();
     else updateThemeSwatchPreview();
-    if (Object.keys(charts).length) renderChart(); // refresh legend/border colors
     if (el.chartModalOverlay.classList.contains("active")) closeChartModal();
   }
 
@@ -2861,6 +2919,7 @@
   /* ---------- Events ---------- */
   function bindEvents() {
     $("addBtn").addEventListener("click", () => openModal(null));
+    $("deductBtn").addEventListener("click", openDeductModal);
     $("cancelBtn").addEventListener("click", closeModal);
     $("addCausaleBtn").addEventListener("click", handleAddCausale);
     el.inputCausale.addEventListener("change", updateDeleteCausaleBtnState);
@@ -2884,47 +2943,6 @@
       if (e.target === el.confirmOverlay) closeConfirm();
     });
 
-    el.chartGrid.addEventListener("click", (e) => {
-      const toggleBtn = e.target.closest("[data-toggle-chart-currency]");
-      if (toggleBtn) {
-        const c = toggleBtn.dataset.toggleChartCurrency;
-        const item = toggleBtn.closest(".currency-collapse-item");
-        const isOpen = item.classList.toggle("open");
-        toggleBtn.setAttribute("aria-expanded", String(isOpen));
-        if (isOpen) {
-          expandedChartCurrencies.add(c);
-          if (!charts[c]) {
-            const canvas = item.querySelector(".chart-mini canvas");
-            const agg = aggregateByCausaleCurrency();
-            const keys = causaleKeysForCurrency(agg, c);
-            charts[c] = buildPieChart(canvas, keys, agg, c);
-          }
-        } else {
-          expandedChartCurrencies.delete(c);
-        }
-        return;
-      }
-      const btn = e.target.closest(".chart-mini");
-      if (btn) openChartModal(btn.dataset.currency);
-    });
-    el.statsBox.addEventListener("click", (e) => {
-      const toggleBtn = e.target.closest("[data-toggle-stats-currency]");
-      if (!toggleBtn) return;
-      const c = toggleBtn.dataset.toggleStatsCurrency;
-      const item = toggleBtn.closest(".currency-collapse-item");
-      const isOpen = item.classList.toggle("open");
-      toggleBtn.setAttribute("aria-expanded", String(isOpen));
-      if (isOpen) expandedStatsCurrencies.add(c);
-      else expandedStatsCurrencies.delete(c);
-    });
-    setupDragReorder(el.chartGrid, (order) => {
-      state.chartCurrencyOrder = order;
-      saveToStorage();
-    });
-    setupDragReorder(el.statsBox, (order) => {
-      state.statsCurrencyOrder = order;
-      saveToStorage();
-    });
     el.chartModalCloseBtn.addEventListener("click", closeChartModal);
     el.chartModalOverlay.addEventListener("click", (e) => {
       if (e.target === el.chartModalOverlay) closeChartModal();
