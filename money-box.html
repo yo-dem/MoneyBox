@@ -715,9 +715,13 @@
     color: var(--color-accent);
   }
 
-  .btn-icon.danger:hover {
-    border-color: var(--color-danger);
+  .btn-icon.danger {
     color: var(--color-danger);
+  }
+
+  .btn-icon.danger:hover {
+    background-color: var(--color-danger);
+    color: #ffffff;
   }
 
   .btn-warning {
@@ -854,6 +858,10 @@
     font-weight: 600;
     white-space: nowrap;
     color: var(--color-accent);
+  }
+
+  .col-importo.negative {
+    color: var(--color-danger);
   }
 
   .causale-tag {
@@ -1019,8 +1027,10 @@
 
   .add-tag-row button {
     width: 42px;
+    height: 42px;
     padding: 0;
     flex-shrink: 0;
+    align-self: center;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1304,15 +1314,13 @@
         </div>
 
         <div class="form-group">
-          <label for="inputCausale" data-i18n="labelCausale">Causale *</label>
-          <div class="causale-row">
-            <select id="inputCausale" required></select>
-            <button type="button" class="btn-icon danger" id="deleteCausaleBtn" data-i18n-title="deleteCausaleTitle" data-i18n-aria="deleteCausaleTitle" title="Elimina causale" aria-label="Elimina causale"></button>
-          </div>
+          <label for="newCausale" data-i18n="labelCausale">Causale *</label>
           <div class="add-tag-row">
-            <input type="text" id="newCausale" data-i18n-placeholder="addCausalePlaceholder" placeholder="Aggiungi nuova causale…" maxlength="40">
+            <input type="text" id="newCausale" data-i18n-placeholder="addCausalePlaceholder" placeholder="Causale…" maxlength="40">
             <button type="button" id="addCausaleBtn" data-i18n-title="addCausaleTitle" data-i18n-aria="addCausaleTitle" title="Aggiungi causale" aria-label="Aggiungi causale"></button>
           </div>
+          <select id="inputCausale" style="margin-top:8px;"></select>
+          <button type="button" class="btn-icon danger" id="deleteCausaleBtn" style="display:none" aria-hidden="true"></button>
           <div class="field-error" id="errorCausale"></div>
         </div>
 
@@ -1483,7 +1491,7 @@
       labelImporto: "Importo *",
       labelNote: "Note",
       selectDate: "Seleziona data",
-      addCausalePlaceholder: "Aggiungi nuova causale…",
+      addCausalePlaceholder: "Causale…",
       addCausaleTitle: "Aggiungi causale",
       deleteCausaleTitle: "Elimina causale",
       notePlaceholder: "Note opzionali…",
@@ -1543,7 +1551,7 @@
       labelImporto: "Amount *",
       labelNote: "Notes",
       selectDate: "Select date",
-      addCausalePlaceholder: "Add new category…",
+      addCausalePlaceholder: "Category…",
       addCausaleTitle: "Add category",
       deleteCausaleTitle: "Delete category",
       notePlaceholder: "Optional notes…",
@@ -1603,7 +1611,7 @@
       labelImporto: "Сумма *",
       labelNote: "Заметки",
       selectDate: "Выберите дату",
-      addCausalePlaceholder: "Добавить новую категорию…",
+      addCausalePlaceholder: "Категория…",
       addCausaleTitle: "Добавить категорию",
       deleteCausaleTitle: "Удалить категорию",
       notePlaceholder: "Необязательные заметки…",
@@ -1663,7 +1671,7 @@
       labelImporto: "Importe *",
       labelNote: "Notas",
       selectDate: "Seleccionar fecha",
-      addCausalePlaceholder: "Añadir nueva categoría…",
+      addCausalePlaceholder: "Categoría…",
       addCausaleTitle: "Añadir categoría",
       deleteCausaleTitle: "Eliminar categoría",
       notePlaceholder: "Notas opcionales…",
@@ -1723,7 +1731,7 @@
       labelImporto: "Montant *",
       labelNote: "Notes",
       selectDate: "Choisir une date",
-      addCausalePlaceholder: "Ajouter une nouvelle catégorie…",
+      addCausalePlaceholder: "Catégorie…",
       addCausaleTitle: "Ajouter une catégorie",
       deleteCausaleTitle: "Supprimer la catégorie",
       notePlaceholder: "Notes facultatives…",
@@ -1783,7 +1791,7 @@
       labelImporto: "Betrag *",
       labelNote: "Notizen",
       selectDate: "Datum wählen",
-      addCausalePlaceholder: "Neue Kategorie hinzufügen…",
+      addCausalePlaceholder: "Kategorie…",
       addCausaleTitle: "Kategorie hinzufügen",
       deleteCausaleTitle: "Kategorie löschen",
       notePlaceholder: "Optionale Notizen…",
@@ -2213,9 +2221,7 @@
 
   /* ---------- Causali helpers ---------- */
   function allCausali() {
-    const set = new Set([...DEFAULT_CAUSALI, ...state.causali_custom]);
-    state.income.forEach((i) => set.add(i.causale));
-    return Array.from(set);
+    return Array.from(new Set([...DEFAULT_CAUSALI, ...state.causali_custom]));
   }
 
   function colorFor(causale) {
@@ -2283,7 +2289,7 @@
       tr.innerHTML = `
         <td>${formatDate(i.data)}</td>
         <td><span class="causale-tag" style="background-color:${colorFor(i.causale)}">${escapeHtml(i.causale)}</span></td>
-        <td class="col-importo">${formatAmount(i.importo, i.currency)}</td>
+        <td class="col-importo${i.importo < 0 ? " negative" : ""}">${formatAmount(i.importo, i.currency)}</td>
         <td class="col-note">${escapeHtml(i.note || "")}</td>
         <td class="col-actions">
           <button class="btn-icon" data-edit="${i.id}"><span class="icon">${ICONS.edit}</span>${escapeHtml(t("editLabel"))}</button>
@@ -2689,7 +2695,7 @@
       $("errorData").textContent = t("errData");
       ok = false;
     }
-    if (!el.inputCausale.value) {
+    if (!el.inputCausale.value && !el.newCausale.value.trim()) {
       $("errorCausale").textContent = t("errCausale");
       ok = false;
     }
@@ -2726,7 +2732,7 @@
     const record = {
       id: id || uid(),
       data: el.inputData.value,
-      causale: el.inputCausale.value,
+      causale: el.newCausale.value.trim() || el.inputCausale.value,
       importo: deductionMode ? -rawAmount : rawAmount,
       currency: currency,
       note: el.inputNote.value.trim()
@@ -2922,7 +2928,10 @@
     $("deductBtn").addEventListener("click", openDeductModal);
     $("cancelBtn").addEventListener("click", closeModal);
     $("addCausaleBtn").addEventListener("click", handleAddCausale);
-    el.inputCausale.addEventListener("change", updateDeleteCausaleBtnState);
+    el.inputCausale.addEventListener("change", () => {
+      el.newCausale.value = "";
+      updateDeleteCausaleBtnState();
+    });
     el.deleteCausaleBtn.addEventListener("click", () => handleDeleteCausale(el.inputCausale.value));
     el.exportBtn.addEventListener("click", exportJSON);
     el.importBtn.addEventListener("click", importData);
