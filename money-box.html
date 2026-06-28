@@ -301,12 +301,8 @@
     transition: background-color 0.3s ease, border-color 0.3s ease;
   }
 
-  /* ---------- Bottom grid (3 panels) ---------- */
-  .bottom-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    align-items: stretch;
+  /* ---------- Bottom panels ---------- */
+  .bottom-panel {
     margin-bottom: 24px;
   }
 
@@ -321,6 +317,53 @@
     font-weight: 700;
     margin-bottom: 16px;
     color: var(--color-text);
+  }
+
+  /* ---------- Trend chart ---------- */
+  .trend-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .trend-header .panel-title { margin-bottom: 0; }
+
+  .trend-filters {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .trend-btn {
+    padding: 4px 11px;
+    border-radius: 20px;
+    border: 1px solid var(--color-border);
+    background: transparent;
+    color: var(--color-text-secondary);
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+
+  .trend-btn:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .trend-btn.active {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .trend-chart-wrapper {
+    position: relative;
+    height: 260px;
+    width: 100%;
   }
 
   /* ---------- Chart ---------- */
@@ -576,75 +619,6 @@
     gap: 12px;
   }
 
-  /* ---------- Breakdown per causale ---------- */
-  .breakdown {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-
-  .breakdown-item { width: 100%; }
-
-  .breakdown-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.88rem;
-  }
-
-  .breakdown-name {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 600;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .breakdown-name .dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    display: inline-block;
-    flex-shrink: 0;
-  }
-
-  .breakdown-amount {
-    color: var(--color-accent);
-    font-weight: 600;
-    white-space: nowrap;
-  }
-
-  .breakdown-bar {
-    height: 6px;
-    background-color: var(--color-bg);
-    border-radius: 4px;
-    margin-top: 6px;
-    overflow: hidden;
-  }
-
-  .breakdown-bar span {
-    display: block;
-    height: 100%;
-    border-radius: 4px;
-    transition: width 0.4s ease;
-  }
-
-  .breakdown-pct {
-    font-size: 0.75rem;
-    color: var(--color-text-secondary);
-    margin-top: 3px;
-  }
-
-  .breakdown-empty {
-    text-align: center;
-    color: var(--color-text-secondary);
-    font-style: italic;
-    padding: 20px 0;
-  }
-
   /* ---------- Toolbar ---------- */
   .toolbar {
     display: flex;
@@ -735,20 +709,7 @@
     background-color: var(--color-warning-hover);
   }
 
-  .card-placeholder {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 120px;
-    border: 2px dashed var(--color-border);
-    border-radius: 12px;
-    background: transparent;
-    color: var(--color-text-secondary);
-    font-size: 0.85rem;
-    font-style: italic;
-  }
-
-  .btn-icon .icon { margin-right: 4px; }
+.btn-icon .icon { margin-right: 4px; }
 
   .btn-iconbtn {
     width: 38px;
@@ -1216,11 +1177,6 @@
     .toolbar-left { width: 100%; }
     .toolbar-left .filter-select { flex: 1; }
     .btn-primary { width: 100%; }
-    .bottom-grid { grid-template-columns: 1fr; }
-  }
-
-  @media (min-width: 769px) and (max-width: 980px) {
-    .bottom-grid { grid-template-columns: 1fr 1fr; }
   }
 </style>
 </head>
@@ -1276,21 +1232,23 @@
       </div>
     </section>
 
-    <!-- Bottom: 3 panels of similar size -->
-    <div class="bottom-grid">
-      <section class="card panel">
-        <div class="card-placeholder">— disponibile in futuro —</div>
-      </section>
-
-      <section class="card panel">
-        <div class="card-placeholder">— disponibile in futuro —</div>
-      </section>
-
-      <section class="card panel">
-        <h3 class="panel-title" data-i18n="panelRiepilogo">Riepilogo per causale</h3>
-        <div class="breakdown" id="breakdownBox"></div>
-      </section>
-    </div>
+    <!-- Grafico andamento patrimonio -->
+    <section class="card panel bottom-panel">
+      <div class="trend-header">
+        <h3 class="panel-title" data-i18n="panelAndamento">Andamento patrimonio</h3>
+        <div class="trend-filters" id="trendFilters">
+          <button class="trend-btn active" data-range="all" data-i18n="trendAll">Da sempre</button>
+          <button class="trend-btn" data-range="1y" data-i18n="trendYear">Ultimo anno</button>
+          <button class="trend-btn" data-range="6m" data-i18n="trend6m">Ultimi 6 mesi</button>
+          <button class="trend-btn" data-range="3m" data-i18n="trend3m">Ultimi 3 mesi</button>
+          <button class="trend-btn" data-range="1w" data-i18n="trendWeek">Ultima settimana</button>
+          <button class="trend-btn" data-range="today" data-i18n="trendToday">Oggi</button>
+        </div>
+      </div>
+      <div class="trend-chart-wrapper">
+        <canvas id="trendChart"></canvas>
+      </div>
+    </section>
 
     <footer>
       <span id="lastModified" data-i18n="footerNoMod">Nessuna modifica</span>
@@ -1506,7 +1464,9 @@
       ariaNextMonth: "Mese successivo",
       panelDistribuzione: "Distribuzione patrimonio",
       panelStatistiche: "Statistiche",
-      panelRiepilogo: "Riepilogo per causale",
+      panelAndamento: "Andamento patrimonio",
+      trendAll: "Da sempre", trendYear: "Ultimo anno", trend6m: "Ultimi 6 mesi",
+      trend3m: "Ultimi 3 mesi", trendWeek: "Ultima settimana", trendToday: "Oggi",
       chartEmpty: "Nessun dato da visualizzare",
       statTransazioni: "Transazioni",
       statMedia: "Media",
@@ -1566,7 +1526,9 @@
       ariaNextMonth: "Next month",
       panelDistribuzione: "Wealth distribution",
       panelStatistiche: "Statistics",
-      panelRiepilogo: "Breakdown by category",
+      panelAndamento: "Wealth trend",
+      trendAll: "All time", trendYear: "Last year", trend6m: "Last 6 months",
+      trend3m: "Last 3 months", trendWeek: "Last week", trendToday: "Today",
       chartEmpty: "No data to display",
       statTransazioni: "Transactions",
       statMedia: "Average",
@@ -1626,7 +1588,9 @@
       ariaNextMonth: "Следующий месяц",
       panelDistribuzione: "Распределение капитала",
       panelStatistiche: "Статистика",
-      panelRiepilogo: "Сводка по категориям",
+      panelAndamento: "Динамика капитала",
+      trendAll: "За всё время", trendYear: "Последний год", trend6m: "Последние 6 мес.",
+      trend3m: "Последние 3 мес.", trendWeek: "Последняя неделя", trendToday: "Сегодня",
       chartEmpty: "Нет данных для отображения",
       statTransazioni: "Операции",
       statMedia: "Среднее",
@@ -1686,7 +1650,9 @@
       ariaNextMonth: "Mes siguiente",
       panelDistribuzione: "Distribución del patrimonio",
       panelStatistiche: "Estadísticas",
-      panelRiepilogo: "Resumen por categoría",
+      panelAndamento: "Evolución del patrimonio",
+      trendAll: "Desde siempre", trendYear: "Último año", trend6m: "Últimos 6 meses",
+      trend3m: "Últimos 3 meses", trendWeek: "Última semana", trendToday: "Hoy",
       chartEmpty: "No hay datos para mostrar",
       statTransazioni: "Transacciones",
       statMedia: "Media",
@@ -1746,7 +1712,9 @@
       ariaNextMonth: "Mois suivant",
       panelDistribuzione: "Répartition du patrimoine",
       panelStatistiche: "Statistiques",
-      panelRiepilogo: "Répartition par catégorie",
+      panelAndamento: "Évolution du patrimoine",
+      trendAll: "Depuis toujours", trendYear: "Dernière année", trend6m: "6 derniers mois",
+      trend3m: "3 derniers mois", trendWeek: "Dernière semaine", trendToday: "Aujourd'hui",
       chartEmpty: "Aucune donnée à afficher",
       statTransazioni: "Transactions",
       statMedia: "Moyenne",
@@ -1806,7 +1774,9 @@
       ariaNextMonth: "Nächster Monat",
       panelDistribuzione: "Vermögensverteilung",
       panelStatistiche: "Statistiken",
-      panelRiepilogo: "Übersicht nach Kategorie",
+      panelAndamento: "Vermögensverlauf",
+      trendAll: "Gesamtzeit", trendYear: "Letztes Jahr", trend6m: "Letzte 6 Monate",
+      trend3m: "Letzte 3 Monate", trendWeek: "Letzte Woche", trendToday: "Heute",
       chartEmpty: "Keine Daten zum Anzeigen",
       statTransazioni: "Transaktionen",
       statMedia: "Durchschnitt",
@@ -1849,6 +1819,8 @@
   const expandedStatsCurrencies = new Set();
   let chartGroupInitialized = false;
   let statsGroupInitialized = false;
+  let trendChartInstance = null;
+  let trendRange = "all";
 
   function orderCurrencies(currencies, savedOrder) {
     const ordered = [];
@@ -1940,7 +1912,8 @@
     chartModalCanvas: $("chartModalCanvas"),
     chartModalLegend: $("chartModalLegend"),
     chartModalCloseBtn: $("chartModalCloseBtn"),
-    breakdownBox: $("breakdownBox"),
+    trendChart: $("trendChart"),
+    trendFilters: $("trendFilters"),
     lastModified: $("lastModified"),
     modalOverlay: $("modalOverlay"),
     modalTitle: $("modalTitle"),
@@ -2236,7 +2209,7 @@
   function render() {
     renderPatrimonio();
     renderTable();
-    renderBreakdown();
+    renderTrendChart();
     populateCausaliSelects();
   }
 
@@ -2475,34 +2448,124 @@
     if (modalChart) { modalChart.destroy(); modalChart = null; }
   }
 
-  function renderBreakdown() {
-    const agg = aggregateByCausaleCurrency();
-    const multi = hasMultipleCurrencies();
-    const currencyTotals = aggregateByCurrency();
-    const keys = Object.keys(agg)
-      .filter((k) => agg[k].total > 0)
-      .sort((a, b) => agg[b].total - agg[a].total);
+  function computeTrendData() {
+    const now = new Date();
+    const nowISO = todayISO();
 
-    if (keys.length === 0) {
-      el.breakdownBox.innerHTML = `<div class="breakdown-empty">${escapeHtml(t("breakdownEmpty"))}</div>`;
-      return;
+    let cutoffISO = null;
+    if (trendRange === "today") {
+      cutoffISO = nowISO;
+    } else if (trendRange === "1w") {
+      const d = new Date(now); d.setDate(d.getDate() - 7); cutoffISO = toISO(d);
+    } else if (trendRange === "3m") {
+      const d = new Date(now); d.setMonth(d.getMonth() - 3); cutoffISO = toISO(d);
+    } else if (trendRange === "6m") {
+      const d = new Date(now); d.setMonth(d.getMonth() - 6); cutoffISO = toISO(d);
+    } else if (trendRange === "1y") {
+      const d = new Date(now); d.setFullYear(d.getFullYear() - 1); cutoffISO = toISO(d);
     }
 
-    el.breakdownBox.innerHTML = keys.map((k) => {
-      const item = agg[k];
-      const label = multi ? `${item.causale} (${item.currency})` : item.causale;
-      const tot = currencyTotals[item.currency] || 0;
-      const pct = tot ? (item.total / tot) * 100 : 0;
-      return `
-        <div class="breakdown-item">
-          <div class="breakdown-head">
-            <span class="breakdown-name"><span class="dot" style="background:${colorFor(item.causale)}"></span>${escapeHtml(label)}</span>
-            <span class="breakdown-amount">${formatAmount(item.total, item.currency)}</span>
-          </div>
-          <div class="breakdown-bar"><span style="width:${pct}%;background:${colorFor(item.causale)}"></span></div>
-          <div class="breakdown-pct">${pct.toFixed(1)}%</div>
-        </div>`;
-    }).join("");
+    const byCurrency = {};
+    state.income.forEach((i) => {
+      const c = i.currency || "EUR";
+      if (!byCurrency[c]) byCurrency[c] = {};
+      byCurrency[c][i.data] = (byCurrency[c][i.data] || 0) + Number(i.importo);
+    });
+
+    const CURRENCY_COLORS = { EUR: "#4a90e2", USD: "#50c878", GBP: "#f5a623", CHF: "#9b59b6", JPY: "#e25c5c" };
+
+    const isoToTs = (iso) => { const [y, m, d] = iso.split("-").map(Number); return new Date(y, m - 1, d).getTime(); };
+
+    return Object.keys(byCurrency).map((currency, ci) => {
+      const dailyMap = byCurrency[currency];
+      const sortedDates = Object.keys(dailyMap).sort();
+
+      let cumul = 0;
+      const fullTimeline = sortedDates.map((d) => {
+        cumul += dailyMap[d];
+        return { date: d, value: Math.round(cumul * 100) / 100 };
+      });
+
+      let points;
+      if (!cutoffISO) {
+        points = fullTimeline;
+      } else {
+        let baseline = 0;
+        for (const p of fullTimeline) { if (p.date < cutoffISO) baseline = p.value; else break; }
+        const inRange = fullTimeline.filter((p) => p.date >= cutoffISO);
+        points = [{ date: cutoffISO, value: baseline }, ...inRange];
+      }
+
+      if (points.length > 0 && points[points.length - 1].date < nowISO) {
+        points.push({ date: nowISO, value: points[points.length - 1].value });
+      }
+      if (points.length === 0) points = [{ date: nowISO, value: 0 }];
+
+      const color = CURRENCY_COLORS[currency] || PALETTE[ci % PALETTE.length];
+      const [r, g, b] = [0, 2, 4].map((o) => parseInt(color.slice(1 + o, 3 + o), 16));
+
+      return {
+        label: currency,
+        data: points.map((p) => ({ x: isoToTs(p.date), y: p.value })),
+        borderColor: color,
+        backgroundColor: `rgba(${r},${g},${b},0.08)`,
+        fill: true,
+        tension: 0.3,
+        pointRadius: points.length <= 40 ? 3 : 0,
+        pointHoverRadius: 5,
+        borderWidth: 2,
+      };
+    });
+  }
+
+  function renderTrendChart() {
+    if (trendChartInstance) { trendChartInstance.destroy(); trendChartInstance = null; }
+    const datasets = computeTrendData();
+    if (datasets.length === 0) return;
+    const locale = LOCALE_MAP[currentLang] || "it-IT";
+    const tsToISO = (val) => {
+      const d = new Date(val);
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    };
+    trendChartInstance = new Chart(el.trendChart.getContext("2d"), {
+      type: "line",
+      data: { datasets },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 300 },
+        interaction: { mode: "index", intersect: false },
+        plugins: {
+          legend: { display: datasets.length > 1 },
+          tooltip: {
+            callbacks: {
+              title: (items) => formatDate(tsToISO(items[0].parsed.x)),
+              label: (ctx) => ` ${formatAmount(ctx.parsed.y, ctx.dataset.label)}`,
+            }
+          }
+        },
+        scales: {
+          x: {
+            type: "linear",
+            ticks: {
+              maxTicksLimit: 8,
+              callback: (val) => formatDate(tsToISO(val)),
+            },
+            grid: { color: "rgba(128,128,128,0.08)" }
+          },
+          y: {
+            ticks: {
+              maxTicksLimit: 6,
+              callback: (val) => {
+                const cur = datasets.length === 1 ? datasets[0].label : null;
+                return cur ? formatAmount(val, cur) : val.toLocaleString(locale);
+              }
+            },
+            grid: { color: "rgba(128,128,128,0.08)" }
+          }
+        }
+      }
+    });
   }
 
   function renderStats() {
@@ -2593,13 +2656,15 @@
     clearErrors();
     const locale = LOCALE_MAP[currentLang] || "it-IT";
     if (income) {
-      el.modalTitle.textContent = t("modalTitleEdit");
+      const isDeduction = income.importo < 0;
+      deductionMode = isDeduction;
+      el.modalTitle.textContent = t(isDeduction ? "modalTitleDeduct" : "modalTitleEdit");
       el.editId.value = income.id;
       setDateValue(income.data);
       ensureCausaleOption(income.causale);
       el.inputCausale.value = income.causale;
       el.inputCurrency.value = income.currency || "EUR";
-      el.inputImporto.value = formatAmountForInput(income.importo, locale);
+      el.inputImporto.value = formatAmountForInput(Math.abs(income.importo), locale);
       el.inputNote.value = income.note || "";
       updateDeleteCausaleBtnState();
     } else {
@@ -2937,6 +3002,13 @@
     el.importBtn.addEventListener("click", importData);
     el.form.addEventListener("submit", handleSubmit);
     el.filterCausale.addEventListener("change", renderTable);
+    el.trendFilters.addEventListener("click", (e) => {
+      const btn = e.target.closest(".trend-btn");
+      if (!btn) return;
+      trendRange = btn.dataset.range;
+      el.trendFilters.querySelectorAll(".trend-btn").forEach((b) => b.classList.toggle("active", b === btn));
+      renderTrendChart();
+    });
     el.inputImporto.addEventListener("input", handleImportoInput);
 
     el.settingsBtn.addEventListener("click", openSettings);
